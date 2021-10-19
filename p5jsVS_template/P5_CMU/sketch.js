@@ -222,6 +222,16 @@ function setup() {
 }
 
 
+function isSquareInside(c, n, p) {
+    cUR = new Point(p.x + tileSize, p.y); //upper right
+    cLL = new Point(p.x, p.y + tileSize); //lower left
+    cLR = new Point(p.x + tileSize, p.y + tileSize);
+    fill("blue");
+    return isInside(c, tick, p) && isInside(c, tick, cUR)
+        && isInside(c, tick, cLL) && isInside(c, tick, cLR);
+}
+
+
 function algorithm() {
     //Create an array that keeps track of top left location of each tile
     drawOutline(coordinatesX, coordinatesY)
@@ -229,16 +239,21 @@ function algorithm() {
         for (row = lowestY; row < highestY; row += tileSize) {
             p = new Point(col, row);
             //Are we inside the shape?
-            if (isInside(coordinates, tick, p)) {
+            if (isSquareInside(coordinates, tick, p)) {
                 fill('red');
                 ellipse(col, row, 5, 5);
                 newCoordinates[newCoordSize] = p;
                 newCoordSize++;
+
+                rect(p.x, p.y, tileSize, tileSize);
+                
+                
+
             }
         }
     }
     //Create a bool array for tile generation later
-    PopulateOutline(coordinates);
+    //PopulateOutline(coordinates);
 }
 
 function PopulateOutline(c) {
@@ -247,25 +262,32 @@ function PopulateOutline(c) {
         fill("blue");
         cUL = newCoordinates[i]; //upper left
 
-        /*cUR = newCoordinates[i]; //upper right
+        cUR = newCoordinates[i]; //upper right
         cUR.x += tileSize;
-        if (cUR.x > highestX || cUR.x < lowestX) continue;
+        //if (cUR.x > highestX || cUR.x < lowestX) continue;
 
         cLL = newCoordinates[i]; //lower left
         cLL.y += tileSize;
-        if (cLL.y > highestY || cLL.y < lowestY) continue;
+        //if (cLL.y > highestY || cLL.y < lowestY) continue;
 
         cLR = newCoordinates[i]; //lower right
         cLR.y += tileSize;
         cLR.x += tileSize;
-        if (cLR.x > highestX || cLR.x < lowestX) continue;
-        if (cLR.y > highestY || cLR.y < lowestY) continue;
-*/
+        //if (cLR.x > highestX || cLR.x < lowestX) continue;
+        //if (cLR.y > highestY || cLR.y < lowestY) continue;
 
-        //rect(cUL.x, cUL.y, tileSize, tileSize);
-        /*if (isInside(c, tick, cUL) && isInside(c, tick, cUR)
+        rect(newCoordinates[i].x, newCoordinates[i].y, tileSize, tileSize);
+        ellipse(cUR.x, cUR.y, 5, 5);
+        ellipse(cLL.x, cLL.y, 5, 5);
+        ellipse(cLR.x, cLR.y, 5, 5);
+
+/*        //rect(cUL.x, cUL.y, tileSize, tileSize);
+        if (isInside(c, tick, cUL) && isInside(c, tick, cUR)
             && isInside(c, tick, cLL) && isInside(c, tick, cLR)) {
             rect(newCoordinates[i].x, newCoordinates[i].y, tileSize, tileSize);
+            ellipse(cUR.x, cUR.y, 5, 5);
+            ellipse(cLL.x, cLL.y, 5, 5);
+            ellipse(cLR.x, cLR.y, 5, 5);
         }*/
     }
     //fill("red");

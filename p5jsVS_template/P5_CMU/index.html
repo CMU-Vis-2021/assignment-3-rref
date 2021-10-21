@@ -14,9 +14,51 @@
     <script src="p5.dom.js"></script>
     <script src="p5.sound.js"></script>
     <script src="p5.func.js"></script>
-    <script src="sketch.js"></script>
+    <script src="vecVis.js"></script>
+    <script src="Visualizer.js"></script>
+
+
     <link href="style.css" rel="stylesheet" />
 </head>
 <body>
+    <table id="matrixA" style="float:left;">
+        <tr>
+            <th><input id="a00" value="0" /></th>
+            <th><input id="a01" value="0" /></th>
+        </tr>
+        <tr>
+            <td><input id="a10" value="0" /></td>
+            <td><input id="a11"value="0" /></td>
+        </tr>
+    </table>
+    <table id="matrixB" style="float:left;">
+        <tr>
+            <th><input id="b00" value="0" /></th>
+            <th><input id="b01" value="0" /></th>
+        </tr>
+        <tr>
+            <td><input id="b10" value="0" /></td>
+            <td><input id="b11" value="0" /></td>
+        </tr>
+    </table>
+    <table>
+        <tr>
+        <th>
+            <button onclick="add()">A + B</button>
+        </th>          
+        </tr>
+        <tr>
+            <th><button onclick="transpose()">A T B</button></th>
+        </tr>
+        <tr>
+            <th><button onclick="multiply()">A * B</button></th>
+        </tr>
+    </table>
+
+
+    
+
+
+
 </body>
 </html>

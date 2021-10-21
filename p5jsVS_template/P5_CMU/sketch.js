@@ -5,86 +5,161 @@ class Point {
     }
 }
 
+//Tile set ups
 var tileSize = 40; //10 by 10 pixels
-var coordinatesX = [];
-var coordinatesY = [];
 var coordinates = [];
+var coordSize = 0;
 var newCoordinates = [];
 var newCoordSize = 0;
-var tileCoords = new Array();
-
-
+var possiblePointCoords = [];
+var possiblePointSize = 0;
+//Bounds
 var highestX = 0;
 var highestY = 0;
 var lowestX = 99999;
 var lowestY = 99999;
-var tiles = new Array();
-var tick = 0;
-var toggleDraw = true;
-let INF = 10000;
+//INF used in figuring out if current point in one poly
+var INF = 10000;
 
+//event bools 
+var toggleDraw = true;
+var canDrawPoints = false;
+var canDrawOutline = false;
+var canDrawShapeOutline = true;
+var canShowGoodCoords = false;
+var canFillInTiles = false;
+
+//time control 
+var secondBetweenEvents = 2;
+var action = 0; //thing that we're up to *right now*
+var ticker = 0;
+var timer = secondBetweenEvents * 1000;
 //visualization code
 {
-    //draw up the shapes row and cols 
-    function divideShape() {
-        for (col = lowestX; col < highestX; col += tileSize) {
-            line(col, highestY, col, lowestY);
-        }
-        for (row = lowestY; row < highestY; row += tileSize) {
-            line(lowestX, row, highestX, row);
+
+    function sleep(millisecondsDuration) {
+        return new Promise((resolve) => {
+            setTimeout(resolve, millisecondsDuration);
+        })
+    }
+
+    function PopulateOutline(f) {
+
+        if (canFillInTiles) {
+            fill(f);
+            for (i = 0; i < newCoordSize; i++) {
+                rect(newCoordinates[i].x, newCoordinates[i].y, tileSize, tileSize);
+            }
+            noFill();
+            canFillInTiles = false;
         }
     }
 
-    function showPoints() {
+    function showUsefulCoords(f) {
 
-        for (row = lowestY; row < highestY; row += tileSize) {
-            for (col = lowestX; col < highestX; col += tileSize) {
-                ellipse(col, row, 5,5);
+        if (canShowGoodCoords) {
+            for (i = 0; i < newCoordSize; i++) {
+                ellipse(newCoordinates[i].x, newCoordinates[i].y, 5, 5);
             }
+            canShowGoodCoords = false;
+            canFillInTiles = true;
         }
-        
+    }
 
+    //draw up the shapes row and cols 
+    function divideShape() {
+        if (canDivideShape == true) {
+            for (col = lowestX; col < highestX; col += tileSize) {
+                line(col, highestY, col, lowestY);
+            }
+            for (row = lowestY; row < highestY; row += tileSize) {
+                line(lowestX, row, highestX, row);
+            }
+            canDivideShape = false;
+            canShowGoodCoords = true;
+        }
+    }
+
+    //show all points within bounds
+    function showPoints() {
+        if (canShowPoints == true) {
+            for (row = lowestY; row < highestY; row += tileSize) {
+                for (col = lowestX; col < highestX; col += tileSize) {
+                    ellipse(col, row, 5, 5);
+                }
+            }
+            canShowPoints = false;
+            canDivideShape = true;
+        }
     }
     //draw shape extents: min/max X/Y values
     function drawShapeOutline() {
-        line(lowestX, highestY, lowestX, lowestY);
-        line(highestX, highestY, highestX, lowestY);
-
-        // ellipse(lowestX, highestY, 5,5);
-        // ellipse(lowestX, lowestY, 5,5);
-        // ellipse(highestX, highestY, 5,5);
-        // ellipse(highestX, lowestY, 5,5);
-
+        if (canDrawShapeOutline == true) {
+            fill("pink")
+            line(lowestX, highestY, lowestX, lowestY);
+            if (millis() % timer == 0) {
+                line(highestX, highestY, highestX, lowestY);
+            }
+            noFill();
+            canDrawShapeOutline = false;
+            canDrawPoints = true;
+        }
+        
     }
     //draw shape itself
-    function drawOutline(coordinatesX, coordinatesY) {
+    function drawOutline() {
         beginShape();
-
-        for (i = 0; i < tick; i++) {
-            vertex(coordinatesX[i], coordinatesY[i]);
+        for (i = 0; i < coordSize; i++) {
+            vertex(coordinates[i].x, coordinates[i].y);
         }
         endShape(CLOSE);
-        drawPoints(coordinatesX, coordinatesY);
+        drawPoints();
     }
-    //draw shape points
-    function drawPoints(coordinatesX, coordinatesY) {
-        for (i = 0; i < tick; i++) {
-            ellipse(coordinatesX[i], coordinatesY[i], 5, 5);
-        }
 
+    //draw shape points
+    function drawPoints() {
+        if (canDrawPoints && action < possiblePointSize && ticker < action + 1) {
+            if (timer < millis()) {
+                fill("red");
+                ellipse(possiblePointCoords[ticker].x, possiblePointCoords[ticker].y, 5, 5);
+                noFill();
+                action++;
+                ticker++;
+            }
+        }
+        else if (action == possiblePointSize) {
+            ticker = 0;
+            action = 0;
+            canDrawPoints = false;
+        }
     }
+
 
 
     //visualize
+    
     function draw() {
-/*         if (!toggleDraw)
-             {
-               background(220);
-               drawPoints(coordinatesX, coordinatesY);
-               drawOutline(coordinatesX, coordinatesY);
-               drawShapeOutline();
-               divideShape();
-             }*/
+         if (!toggleDraw)
+         {
+            //background(220);
+            drawShapeOutline()
+            drawPoints();
+            
+            //drawShapeOutline();
+            //showPoints();
+            //divideShape();
+            //showUsefulCoords("red");
+            //PopulateOutline("blue");
+         }
+    }
+
+    function runVis() {
+        //drawOutline();
+        /*drawShapeOutline();
+        showPoints();
+        divideShape();
+        showUsefulCoords("red");
+        PopulateOutline("blue");*/
     }
 
 }
@@ -221,85 +296,48 @@ function setup() {
 
 }
 
-
+function myFunction() {
+    print("hello world!");
+}
 function isSquareInside(c, n, p) {
     cUR = new Point(p.x + tileSize, p.y); //upper right
     cLL = new Point(p.x, p.y + tileSize); //lower left
     cLR = new Point(p.x + tileSize, p.y + tileSize);
-    fill("blue");
-    return isInside(c, tick, p) && isInside(c, tick, cUR)
-        && isInside(c, tick, cLL) && isInside(c, tick, cLR);
+    return isInside(c, coordSize, p) && isInside(c, coordSize, cUR)
+        && isInside(c, coordSize, cLL) && isInside(c, coordSize, cLR);
 }
 
 
 function algorithm() {
     //Create an array that keeps track of top left location of each tile
-    drawOutline(coordinatesX, coordinatesY)
+
+    for (row = lowestY; row < highestY; row += tileSize) {
+        for (col = lowestX; col < highestX; col += tileSize) {
+            possiblePointCoords[possiblePointSize] = new Point(col, row);
+            possiblePointSize++;
+        }
+    }
     for (col = lowestX; col < highestX; col += tileSize) {
         for (row = lowestY; row < highestY; row += tileSize) {
             p = new Point(col, row);
             //Are we inside the shape?
-            if (isSquareInside(coordinates, tick, p)) {
-                fill('red');
-                ellipse(col, row, 5, 5);
+            if (isSquareInside(coordinates, coordSize, p)) {
                 newCoordinates[newCoordSize] = p;
                 newCoordSize++;
-
-                rect(p.x, p.y, tileSize, tileSize);
-                
-                
-
             }
         }
     }
     //Create a bool array for tile generation later
-    //PopulateOutline(coordinates);
 }
 
-function PopulateOutline(c) {
-    //showPoints(coordinatesX, coordinatesY);
-    for (i = 0; i < newCoordSize; i++) {
-        fill("blue");
-        cUL = newCoordinates[i]; //upper left
-
-        cUR = newCoordinates[i]; //upper right
-        cUR.x += tileSize;
-        //if (cUR.x > highestX || cUR.x < lowestX) continue;
-
-        cLL = newCoordinates[i]; //lower left
-        cLL.y += tileSize;
-        //if (cLL.y > highestY || cLL.y < lowestY) continue;
-
-        cLR = newCoordinates[i]; //lower right
-        cLR.y += tileSize;
-        cLR.x += tileSize;
-        //if (cLR.x > highestX || cLR.x < lowestX) continue;
-        //if (cLR.y > highestY || cLR.y < lowestY) continue;
-
-        rect(newCoordinates[i].x, newCoordinates[i].y, tileSize, tileSize);
-        ellipse(cUR.x, cUR.y, 5, 5);
-        ellipse(cLL.x, cLL.y, 5, 5);
-        ellipse(cLR.x, cLR.y, 5, 5);
-
-/*        //rect(cUL.x, cUL.y, tileSize, tileSize);
-        if (isInside(c, tick, cUL) && isInside(c, tick, cUR)
-            && isInside(c, tick, cLL) && isInside(c, tick, cLR)) {
-            rect(newCoordinates[i].x, newCoordinates[i].y, tileSize, tileSize);
-            ellipse(cUR.x, cUR.y, 5, 5);
-            ellipse(cLL.x, cLL.y, 5, 5);
-            ellipse(cLR.x, cLR.y, 5, 5);
-        }*/
-    }
-    //fill("red");
-    //showPoints(coordinatesX, coordinatesY);
-}
 
 
 //key press debug
 function keyPressed() {
     if (keyCode == TAB) {
-        toggleDraw = false;
         algorithm();
+        drawOutline();
+        toggleDraw = false;
     }
 
 }
@@ -308,15 +346,37 @@ function keyPressed() {
 //mouse press for points
 function mousePressed() {
     if (toggleDraw) {
-        coordinatesX[tick] = mouseX;
-        coordinatesY[tick] = mouseY;
-        coordinates[tick] = new Point(mouseX, mouseY);
+        coordinates[coordSize] = new Point(mouseX, mouseY);
 
         if (mouseX > highestX) highestX = mouseX;
         if (mouseY > highestY) highestY = mouseY;
         if (mouseX < lowestX) lowestX = mouseX;
         if (mouseY < lowestY) lowestY = mouseY;
-        tick += 1;
+        coordSize += 1;
         ellipse(mouseX, mouseY, 5, 5);
     }
 }
+
+
+
+
+
+/*
+ TODO: Set the points to move independently of eachother per frame
+ i.e.
+ F1: 
+ * 
+ F2: 
+ *
+ * 
+ F3: 
+ *
+ * 
+ * 
+ and so on...
+ TODO: Make a web page using react.js
+ TODO: Make a matrices visualization
+ Good luck, kid
+
+
+ */

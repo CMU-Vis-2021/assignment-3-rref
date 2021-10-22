@@ -22,10 +22,15 @@ var coordinates = [];
 var coordSize = 0;
 
 var activate = false;
+var doOnce = true;
+
 
 function draw() {
     if (activate) {
-        populateGrid();
+        if (doOnce)
+        {
+            doOnce = false;
+        }
     }
 }
 
@@ -36,6 +41,7 @@ function setup() {
 
 function keyPressed() {
     if (keyCode == TAB && !activate) {
+        populateGrid();
         activate = true;
     }
 }
@@ -97,7 +103,7 @@ function populateGrid() {
     placeSign(vectorA, operation, new Point(25, 30));
     var vecB = populateVector(vectorB, new Point(60, 50));
     placeSign(vectorA, operations.EQUAL, new Point(60 + offsetX, 30));
-    visualizeAddSub(vecA, vecB, new Point(110, 50), true, true);
+    visualizeAddSub(vecA, vecB, new Point(110, 50), true, false);
 }
 
 function visualizeAddSub(vecA, vecB, offset, add, vis) {
@@ -122,7 +128,6 @@ function visualizeAddSub(vecA, vecB, offset, add, vis) {
                 vecC[row][col] = new Point((tileSize.x * col) + offset.x, tileSize.y * row + offset.y, payload);
             }
             text(payload, vecC[row][col].x + (20 * col), vecC[row][col].y);
-
         }
     }
     return new Vec(vecC, new Point(vecA.size.x, vecA.size.y));

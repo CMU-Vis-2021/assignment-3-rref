@@ -1,16 +1,71 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Assignment 3</title>
-    <link rel="stylesheet" href="./style.css" />
-  </head>
-  <body>
-    <h2>Assignment 3</h2>
-    <div id="d3-div"></div>
-    <div id="vega-div"></div>
-    <script type="module" src="./main.js"></script>
-  </body>
+﻿<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>p5.js example</title>
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+        }
+    </style>
+    <script src="p5.js"></script>
+    <script src="p5.dom.js"></script>
+    <script src="p5.sound.js"></script>
+    <script src="p5.func.js"></script>
+    <script src="vecVis.js"></script>
+    <script src="Visualizer.js"></script>
+
+
+    <link href="style.css" rel="stylesheet" />
+</head>
+<body>
+    <H1>MatriCalc!</H1>
+    <p>Welcome to MatriCalc, an online matrices addition and subtraction website.</p>
+    <p>To get started, type in a matrix (a couple digits per element pls) and then press the button of you choice.</p>
+    <p>Press ENTER to show the intermediary work and then press the down arrow for the follow answer.</p>
+    <p>The textbox on the side outputs the latex of the answer when the calculation buttons are pressed</p>
+    <table id="matrixA" style="float:left;">
+        <tr>
+            <th><input id="a00" value="0" /></th>
+            <th><input id="a01" value="0" /></th>
+        </tr>
+        <tr>
+            <td><input id="a10" value="0" /></td>
+            <td><input id="a11" value="0" /></td>
+        </tr>
+    </table>
+    <table id="matrixB" style="float:left;">
+        <tr>
+            <th><input id="b00" value="0" /></th>
+            <th><input id="b01" value="0" /></th>
+        </tr>
+        <tr>
+            <td><input id="b10" value="0" /></td>
+            <td><input id="b11" value="0" /></td>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <th>
+                <button onclick="add()">A + B</button>
+            </th>
+        <tr>
+            <button onclick="latex()">Latex</button>
+        </tr>
+        <tr>
+            <th><button onclick="sub()">A - B</button></th>
+            <th>
+                <input id="latex" value="0" />
+            </th>
+        </tr>
+    </table>
+
+
+
+
+
+
+</body>
 </html>

@@ -29,21 +29,22 @@ function draw() {
 }
 
 function setup() {
-    createCanvas(720, 720);
+    createCanvas(720, 300);
     background(220);
 }
 
 function keyPressed() {
-    if (keyCode == RETURN && !activate) {
+    if (keyCode == RETURN) {
         //restart the engine
         background(220);
-        vec3 = populateGrid();
-        activate = true;
-        tick = 0;
+        vec3 = populateGrid(true);
     }
     if (keyCode == DOWN_ARROW)
     {
-        VisualizeAddSub(vec3, tick);
+        push()
+        translate(0, 75);
+        vec3 = populateGrid(false);
+        pop();
     }
 }
 
@@ -98,23 +99,23 @@ function placeSign(vector, sign, offset) {
 }
 
 //outputs the matrices equation... there is probably a better way to do this but I'm not sure right now.
-function populateGrid() {
+function populateGrid(vis) {
     offsetX = 15;
     var vecA = populateVector(vectorA, new Point(10, 50));
     placeSign(vectorA, operation, new Point(25, 30));
     var vecB = populateVector(vectorB, new Point(60, 50));
     placeSign(vectorA, operations.EQUAL, new Point(60 + offsetX, 30));
-    return SetUpVisualizations(operation, vecA, vecB);
+    return SetUpVisualizations(operation, vecA, vecB,vis);
 }
 
 
-function SetUpVisualizations(operation, vecA, vecB)
+function SetUpVisualizations(operation, vecA, vecB, vis)
 {
     switch (operation) {
             case operations.ADD:
-                return SetUpVisualizeAddSub(vecA, vecB, new Point(110, 50), true, true);
+                return SetUpVisualizeAddSub(vecA, vecB, new Point(110, 50), true, vis);
             case operations.SUB:
-                return SetUpVisualizeAddSub(vecA, vecB, new Point(110, 50), false, true);
+                return SetUpVisualizeAddSub(vecA, vecB, new Point(110, 50), false, vis);
                 break;
             case operations.MULT:
                 S = "x";
@@ -152,7 +153,7 @@ function SetUpVisualizeAddSub(vecA, vecB, offset, add, vis) {
                 else payload = (vecA.vec[row][col].payload - vecB.vec[row][col].payload);
                 vecC[row][col] = new Point((tileSize.x * col) + offset.x, tileSize.y * row + offset.y, payload);
             }
-            //text(payload, vecC[row][col].x + (20 * col), vecC[row][col].y);
+            text(payload, vecC[row][col].x + (20 * col), vecC[row][col].y);
         }
     }
     return new Vec(vecC, new Point(vecA.size.x, vecA.size.y));
@@ -171,10 +172,11 @@ function get_col(index, width)
 
 function VisualizeAddSub(vecC, ticker, offset)
 {
-    r = get_row(ticker, vecC.size.y);
+    r = Math.ceil(get_row(ticker, vecC.size.y));
     c = get_col(ticker, vecC.size.x)
-    text(vecC.vec[r][c].payload, vecC.vec[r][c].x + (20 * c), vecC.vec[r][c].y + (20 * r));
-    ticker++;
+    print(r);
+    text(vecC.vec[r][c].payload, vecC.vec[r][c].x, vecC.vec[r][c].y);
+    return ticker + 1;
 }
 
 

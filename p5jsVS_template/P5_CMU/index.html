@@ -21,6 +21,11 @@
     <link href="style.css" rel="stylesheet" />
 </head>
 <body>
+    <H1>MatriCalc!</H1>
+    <p>Welcome to MatriCalc, an online matrices addition and subtraction website.</p>
+    <p>To get started, type in a matrix (a couple digits per element pls) and then press the button of you choice.</p>
+    <p>Press ENTER to show the intermediary work and then press the down arrow for the follow answer.</p>
+    <p>The textbox on the side outputs the latex of the answer when the calculation buttons are pressed</p>
     <table id="matrixA" style="float:left;">
         <tr>
             <th><input id="a00" value="0" /></th>
@@ -28,7 +33,7 @@
         </tr>
         <tr>
             <td><input id="a10" value="0" /></td>
-            <td><input id="a11"value="0" /></td>
+            <td><input id="a11" value="0" /></td>
         </tr>
     </table>
     <table id="matrixB" style="float:left;">
@@ -43,20 +48,22 @@
     </table>
     <table>
         <tr>
-        <th>
-            <button onclick="add()">A + B</button>
-        </th>          
+            <th>
+                <button onclick="add()">A + B</button>
+            </th>
+        <tr>
+            <button onclick="latex()">Latex</button>
         </tr>
         <tr>
-            <th><button onclick="transpose()">A T B</button></th>
-        </tr>
-        <tr>
-            <th><button onclick="multiply()">A * B</button></th>
+            <th><button onclick="sub()">A - B</button></th>
+            <th>
+                <input id="latex" value="0" />
+            </th>
         </tr>
     </table>
 
 
-    
+
 
 
 

@@ -25,6 +25,23 @@ var operation;
 
 var finished = false;
 
+function getSign(operation) {
+    switch (operation) {
+        case operations.ADD:
+            return "+";
+        case operations.SUB:
+            return"-";
+        case operations.MULT:
+            return "x";
+        case operations.TRANS:
+            return "T";
+            break;
+        case operations.DOT:
+            return "*";
+        case operations.EQUAL:
+            return "=";
+    }
+}
 
 function add() {
     parseVectors();
@@ -37,7 +54,7 @@ function add() {
     operation = operations.ADD;
 }
 
-function subtraction() {
+function sub() {
     parseVectors();
     for (var i = 0; i < vectorA.length; i++) {
         for (var j = 0; j < vectorA[i].length; j++) {
@@ -47,6 +64,23 @@ function subtraction() {
     finished = true;
     operation = operations.SUB;
 }
+
+function latex() {
+    S = getSign(operation);
+    out = "\\[\\begin{ pmatrix }";
+    for (var i = 0; i < vectorA.length; i++) {
+        for (var j = 0; j < vectorA[i].length; j++) {
+            out = out + vectorC[i][j];
+            out = out + "&";
+        }
+        out = out + "\\\\";
+    }
+    out = out + "\\end{ pmatrix }.\\]";
+    document.getElementById("latex").value = out;
+    return;
+}
+
+
 
 function transpose() {
     parseVectors();

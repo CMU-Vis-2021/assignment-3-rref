@@ -123,7 +123,7 @@ function visualizeAddSub(vecA, vecB, offset, add, vis) {
                 vecC[row][col] = new Point((tileSize.x * col) + offset.x, tileSize.y * row + offset.y, payload);
             }
             else {
-                if (add) payload = (vecA.vec[row][col].payload + vecB.vec[row][col].payload);
+                if (add) payload = (parseInt(vecA.vec[row][col].payload) + parseInt(vecB.vec[row][col].payload));
                 else payload = (vecA.vec[row][col].payload - vecB.vec[row][col].payload);
                 vecC[row][col] = new Point((tileSize.x * col) + offset.x, tileSize.y * row + offset.y, payload);
             }

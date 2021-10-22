@@ -23,15 +23,9 @@ var coordSize = 0;
 
 var activate = false;
 var doOnce = true;
-
+var tick = 0;
 
 function draw() {
-    if (activate) {
-        if (doOnce)
-        {
-            doOnce = false;
-        }
-    }
 }
 
 function setup() {
@@ -40,9 +34,16 @@ function setup() {
 }
 
 function keyPressed() {
-    if (keyCode == TAB && !activate) {
-        populateGrid();
+    if (keyCode == RETURN && !activate) {
+        //restart the engine
+        background(220);
+        vec3 = populateGrid();
         activate = true;
+        tick = 0;
+    }
+    if (keyCode == DOWN_ARROW)
+    {
+        VisualizeAddSub(vec3, tick);
     }
 }
 
@@ -103,10 +104,34 @@ function populateGrid() {
     placeSign(vectorA, operation, new Point(25, 30));
     var vecB = populateVector(vectorB, new Point(60, 50));
     placeSign(vectorA, operations.EQUAL, new Point(60 + offsetX, 30));
-    visualizeAddSub(vecA, vecB, new Point(110, 50), true, false);
+    return SetUpVisualizations(operation, vecA, vecB);
 }
 
-function visualizeAddSub(vecA, vecB, offset, add, vis) {
+
+function SetUpVisualizations(operation, vecA, vecB)
+{
+    switch (operation) {
+            case operations.ADD:
+                return SetUpVisualizeAddSub(vecA, vecB, new Point(110, 50), true, true);
+            case operations.SUB:
+                return SetUpVisualizeAddSub(vecA, vecB, new Point(110, 50), false, true);
+                break;
+            case operations.MULT:
+                S = "x";
+                break;
+            case operations.TRANS:
+                S = "T";
+                break;
+            case operations.DOT:
+                S = "*";
+                break;
+            case operations.EQUAL:
+                S = "=";
+                break;
+     }
+}
+
+function SetUpVisualizeAddSub(vecA, vecB, offset, add, vis) {
     //TODO: write up some assertions that the dimensions are the same and other rules for this.
     vecC = [];
     for (var row = 0; row < vecA.size.y; row++) {
@@ -127,10 +152,29 @@ function visualizeAddSub(vecA, vecB, offset, add, vis) {
                 else payload = (vecA.vec[row][col].payload - vecB.vec[row][col].payload);
                 vecC[row][col] = new Point((tileSize.x * col) + offset.x, tileSize.y * row + offset.y, payload);
             }
-            text(payload, vecC[row][col].x + (20 * col), vecC[row][col].y);
+            //text(payload, vecC[row][col].x + (20 * col), vecC[row][col].y);
         }
     }
     return new Vec(vecC, new Point(vecA.size.x, vecA.size.y));
+}
+
+
+function get_row(index, width)
+{
+  return index / width;
+}
+
+function get_col(index, width)
+{
+  return index % width; 
+}
+
+function VisualizeAddSub(vecC, ticker, offset)
+{
+    r = get_row(ticker, vecC.size.y);
+    c = get_col(ticker, vecC.size.x)
+    text(vecC.vec[r][c].payload, vecC.vec[r][c].x + (20 * c), vecC.vec[r][c].y + (20 * r));
+    ticker++;
 }
 
 
